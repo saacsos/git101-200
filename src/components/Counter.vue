@@ -2,12 +2,12 @@
   <div class="mb-20">
     Counter: {{ number }}
     <div>
-      <label for="counter" v-bind:title="number">Counter: </label>
+      <label for="counter" :title="number">Counter: </label>
       <input type="text" v-model="number">
-      <button v-on:click="increase">+</button>
-      <button v-on:click="decrease">-</button>
-      <button>+10</button>
-      <button>x2</button>
+      <button @click="increase(1)">+</button>
+      <button @click="increase(-1)">-</button>
+      <button @click="increase(10)">+10</button>
+      <button @click="increase(number)">x2</button>
     </div>
     
   </div>
@@ -21,12 +21,9 @@ export default {
     }
   },
   methods: {
-    increase() {
-      this.number++
+    increase(number) {
+      this.number += number
     },
-    decrease() {
-      this.number--
-    }
   }
 }
 </script>
