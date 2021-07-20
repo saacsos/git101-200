@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import PokemonStore from '@/store/Pokemon'
+
 export default {
   data() {
     return {
@@ -57,7 +59,7 @@ export default {
         )
       }
 
-      // todo: ส่งข้อมูลให้ Store
+      PokemonStore.dispatch('addPokemon', payload)
       console.log(payload)
       this.clearForm()
     }

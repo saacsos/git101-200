@@ -1,5 +1,9 @@
 import Vue from "vue"
 import Vuex from "vuex"
+import Axios from 'axios'
+
+let api_endpoint =
+  "https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/pokedex.json"
 
 Vue.use(Vuex)
 
@@ -19,8 +23,12 @@ export default new Vuex.Store({
     fetch(state, { res }) {
       state.data = res.data
     },
-    add (state, { payload }) {
+    add(state, { payload }) {
       state.data.push(payload)
+    },
+    edit(state, { payload }) {
+      state.data[payload.index].name = payload.name
+      state.data[payload.index].type = payload.type
     },
   },
 
@@ -28,29 +36,20 @@ export default new Vuex.Store({
   // ให้ภายนอก (component อื่น) เรียกใช้
   // หรือดึงค่าจากภายนอก เช่น API, server
   actions: {
+    editPokemon({ commit }, payload) {
+      // todo: call api to edit data
+      commit("edit", { payload })
+    },
+
     // commit เป็น keyword ไว้เรียก mutation
-    fetchPokemon({ commit }) {
-      // สมมติดึงข้อมูลจาก API
-      let res = {
-        data: [
-          {
-            name: {
-              english: "Bulbasaur",
-              japanese: "Fushikidane",
-            },
-            type: ["Grass", "Poison"],
-          },
-          {
-            name: {
-              english: "Bulbasaur 2",
-              japanese: "Fushikidane 2",
-            },
-            type: ["Grass", "Poison"],
-          },
-        ],
-      }
+    async fetchPokemon({ commit }) {
+      let res = await Axios.get(api_endpoint)
 
       commit("fetch", { res })
+    },
+    addPokemon({ commit }, payload) {
+      // todo: call api to add data
+      commit("add", { payload })
     },
   },
 
