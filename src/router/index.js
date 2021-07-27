@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import NumberList from '@/views/NumberList'
+import PokemonList from "@/views/PokemonList"
+import Pokedex from "@/views/Pokedex"
 
 Vue.use(VueRouter)
 
@@ -17,6 +19,16 @@ const routes = [
     component: NumberList,
   },
   {
+    path: "/pokemons",
+    name: "PokemonList",
+    component: PokemonList,
+  },
+  {
+    path: "/pokedex",
+    name: "Pokedex",
+    component: Pokedex,
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
@@ -25,7 +37,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
-];
+]
 
 const router = new VueRouter({
   mode: 'history',
