@@ -46,7 +46,7 @@ export default {
         pokemon_types: "",
       }
     },
-    addPokemon() {
+    async addPokemon() {
       // Fire, Water ==split(',')=> ['Fire', ' Water']
       let payload = {
         name: this.form.name,
@@ -54,8 +54,13 @@ export default {
         pokemon_types: this.form.pokemon_types.split(",").map((item) => item.trim()),
       }
 
-      PokedexApiStore.dispatch("addPokemon", payload)
+      let res = await PokedexApiStore.dispatch("addPokemon", payload)
       // this.clearForm()
+      if (res.success) {
+        this.$router.push("/pokedex")
+      } else {
+        this.$swal("Add Failed", res.message, "error")
+      }
     },
   },
 }

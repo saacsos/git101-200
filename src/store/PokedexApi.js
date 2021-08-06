@@ -1,8 +1,9 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import Axios from 'axios'
+import AuthService from '@/services/AuthService'
 
-let api_endpoint = process.env.POKEDEX_ENDPOINT || "http://localhost:1337"
+let api_endpoint = process.env.VUE_APP_POKEDEX_ENDPOINT || "http://localhost:1337"
 
 Vue.use(Vuex)
 
@@ -73,19 +74,37 @@ export default new Vuex.Store({
                       .join('&')
       let res_types = await Axios.get(api_endpoint + "/types?" + qs)
 
-      let url = api_endpoint + "/monsters"
-      let body = {
-        name: payload.name,
-        name_jp: payload.name_jp,
-        pokemon_types: res_types.data.map(it => it.id)
+      try {
+        let url = api_endpoint + "/monsters"
+        // let user = AuthService.getUser()
+        let body = {
+          name: payload.name,
+          name_jp: payload.name_jp,
+          // user: user.id,
+          pokemon_types: res_types.data.map((it) => it.id),
+        }
+        let headers = AuthService.getApiHeader()
+        let res = await Axios.post(url, body, headers)
+        if (res.status === 200) {
+          commit("add", res.data)
+          return {
+            success: true,
+            data: res.data
+          }
+        } else {
+          console.error(res)
+          return {
+            success: true,
+            message: "Unknown status code: " + res.status
+          }
+        }
+      } catch (e) {
+        console.error(e)
+        return {
+          success: false,
+          message: "Unknown error: " + e.response
+        }
       }
-
-      let res = await Axios.post(url, body)
-      if (res.status === 200) {
-        commit("add", res.data)
-      } else {
-        console.error(res)
-      } 
     },
   },
 
